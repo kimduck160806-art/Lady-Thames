@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Question Page</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 150vh;
+            background-image: url('your-background-image.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-family: Arial, sans-serif;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+
+        .container {
+            text-align: center;
+            background: rgba(0,0,0,0.3);
+            padding: 40px;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.3);
+            backdrop-filter: blur(10px);
+            max-width: 600px;
+            width: 90%;
+            transition: all 0.5s ease;
+        }
+
+        .container.dark-mode {
+            background: rgba(0,0,0,0.7);
+            border: 2px solid rgba(255,255,255,0.5);
+        }
+
+        .question {
+            font-size: 2.5em;
+            margin-bottom: 40px;
+            font-weight: bold;
+            /* This preserves your exact spacing and line breaks */
+            white-space: pre-line;
+        }
+
+        .button-container {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .choice-btn {
+            padding: 15px 40px;
+            font-size: 1.5em;
+            border: 2px solid rgba(255,255,255,0.5);
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            text-transform: uppercase;
+            background: transparent;
+            color: white;
+        }
+
+        .yes-btn {
+            background: transparent;
+            color: white;
+        }
+
+        .no-btn {
+            background: transparent;
+            color: white;
+        }
+
+        .choice-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 8px 25px rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.8);
+        }
+
+        .yes-btn.enlarged {
+            animation: pulse 2s infinite;
+        }
+
+        .no-btn.shrunk {
+            border: 2px solid rgba(255,255,255,0.3);
+            background: transparent !important;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(var(--yes-scale, 1)); }
+            50% { transform: scale(calc(var(--yes-scale, 1) + 0.1)); }
+            100% { transform: scale(var(--yes-scale, 1)); }
+        }
+
+        .result-image {
+            margin: 30px 0;
+            opacity: 0;
+            transform: scale(0);
+            transition: all 0.5s ease;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .result-image.show {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .result-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 15px;
+        }
+
+        .next-btn {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin-top: 20px;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.5s ease;
+            font-weight: bold;
+        }
+
+        .next-btn.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .next-btn:hover {
+            background: linear-gradient(45deg, #1976D2, #0D47A1);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        /* Scroll indicator */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: white;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            z-index: 100;
+        }
+
+        .scroll-indicator.show {
+            opacity: 1;
+            animation: bounce 2s infinite;
+        }
+
+        .scroll-text {
+            font-size: 1.3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            font-weight: bold;
+            background: rgba(0,0,0,0.5);
+            padding: 8px 15px;
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.6);
+        }
+
+        .scroll-arrow {
+            font-size: 3em;
+            animation: float 1.5s ease-in-out infinite;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid rgba(255,255,255,0.8);
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-15px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-8px);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-8px) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-15px) rotate(0deg);
+            }
+            75% {
+                transform: translateY(-8px) rotate(5deg);
+            }
+        }
+
+        /* Hide scroll indicator when content is scrolled */
+        @media (max-height: 800px) {
+            .scroll-indicator {
+                display: none;
+            }
+        }
+
+        /* Fireworks Animation */
+        .fireworks-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .firework {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            animation: firework 2s ease-out forwards;
+        }
+
+        @keyframes firework {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(20);
+                opacity: 0;
+            }
+        }
+
+        .spark {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            border-radius: 50%;
+            animation: spark 1.5s ease-out forwards;
+        }
+
+        @keyframes spark {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--dx), var(--dy));
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="fireworks-container" id="fireworksContainer"></div>
+    
+    <div class="scroll-indicator" id="scrollIndicator">
+        <div class="scroll-text">Scroll to see more</div>
+        <div class="scroll-arrow">↓</div>
+    </div>
+    
+    <div class="container">
+        <div class="question">Kimaya             
+Do you wanna grow old together?             
+As best friends but romantic styles          </div>
+        
+        <div class="button-container">
+            <button class="choice-btn yes-btn" id="yesBtn">Yes</button>
+            <button class="choice-btn no-btn" id="noBtn">No</button>
+        </div>
+        
+        <div class="result-image" id="resultImage">
+            <img src="success-image.jpg" alt="Success celebration">
+        </div>
+        
+        <button class="next-btn" id="nextBtn">Next Page →</button>
+    </div>
+
+    <script>
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const resultImage = document.getElementById('resultImage');
+        const nextBtn = document.getElementById('nextBtn');
+        const fireworksContainer = document.getElementById('fireworksContainer');
+        const container = document.querySelector('.container');
+        const scrollIndicator = document.getElementById('scrollIndicator');
+
+        let answered = false;
+        let yesScale = 1;
+        let noScale = 1;
+        let noClickCount = 0;
+
+        // Show scroll indicator after page loads
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                scrollIndicator.classList.add('show');
+            }, 1000); // Show after 1 second
+        });
+
+        // Hide scroll indicator when user scrolls or interacts
+        let hideScrollIndicator = function() {
+            scrollIndicator.classList.remove('show');
+            window.removeEventListener('scroll', hideScrollIndicator);
+            document.removeEventListener('click', hideScrollIndicator);
+        };
+
+        window.addEventListener('scroll', hideScrollIndicator);
+        document.addEventListener('click', hideScrollIndicator);
+
+        yesBtn.addEventListener('click', function() {
+            if (answered) return;
+            answered = true;
+            
+            // Show image with animation
+            resultImage.classList.add('show');
+            
+            // Start fireworks
+            createFireworks();
+            
+            // Show next button after a delay
+            setTimeout(() => {
+                nextBtn.classList.add('show');
+            }, 1000);
+        });
+
+        noBtn.addEventListener('click', function() {
+            if (answered) return;
+            
+            noClickCount++;
+            
+            // Increase yes button size and decrease no button size each click
+            yesScale += 0.3;
+            noScale -= 0.15;
+            
+            // Apply the scaling
+            yesBtn.style.transform = `scale(${yesScale})`;
+            yesBtn.style.setProperty('--yes-scale', yesScale);
+            yesBtn.classList.add('enlarged');
+            
+            noBtn.style.transform = `scale(${Math.max(noScale, 0.3)})`;
+            
+            // Make no button more transparent after first click
+            if (noClickCount === 1) {
+                noBtn.classList.add('shrunk');
+                container.classList.add('dark-mode');
+            }
+            
+            // If no button gets too small, disable it (but don't show next button)
+            if (noScale <= 0.3) {
+                noBtn.style.pointerEvents = 'none';
+                noBtn.style.opacity = '0.2';
+            }
+        });
+
+        nextBtn.addEventListener('click', function() {
+            window.location.href = "seventh-final-page.html";
+        });
+
+        function createFireworks() {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#6c5ce7', '#a29bfe'];
+            
+            for (let i = 0; i < 6; i++) {
+                setTimeout(() => {
+                    const firework = document.createElement('div');
+                    firework.className = 'firework';
+                    firework.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    firework.style.left = Math.random() * window.innerWidth + 'px';
+                    firework.style.top = Math.random() * window.innerHeight + 'px';
+                    
+                    fireworksContainer.appendChild(firework);
+                    
+                    // Create sparks
+                    setTimeout(() => createSparks(firework), 500);
+                    
+                    // Remove firework after animation
+                    setTimeout(() => {
+                        if (firework.parentNode) {
+                            firework.parentNode.removeChild(firework);
+                        }
+                    }, 2000);
+                }, i * 300);
+            }
+        }
+
+        function createSparks(firework) {
+            const colors = ['#ff6b6b', '#4ecdc4', '#45b7d1', '#f9ca24', '#6c5ce7', '#a29bfe'];
+            const rect = firework.getBoundingClientRect();
+            
+            for (let i = 0; i < 12; i++) {
+                const spark = document.createElement('div');
+                spark.className = 'spark';
+                spark.style.background = colors[Math.floor(Math.random() * colors.length)];
+                spark.style.left = rect.left + rect.width / 2 + 'px';
+                spark.style.top = rect.top + rect.height / 2 + 'px';
+                
+                const angle = (i * 30) * Math.PI / 180;
+                const distance = 100 + Math.random() * 100;
+                const dx = Math.cos(angle) * distance;
+                const dy = Math.sin(angle) * distance;
+                
+                spark.style.setProperty('--dx', dx + 'px');
+                spark.style.setProperty('--dy', dy + 'px');
+                
+                fireworksContainer.appendChild(spark);
+                
+                setTimeout(() => {
+                    if (spark.parentNode) {
+                        spark.parentNode.removeChild(spark);
+                    }
+                }, 1500);
+            }
+        }
+    </script>
+</body>
+</html>

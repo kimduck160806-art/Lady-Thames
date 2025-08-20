@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Journey</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        /* Additional styles for the navigation button */
+        #next-page-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1em;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            font-weight: 500;
+            letter-spacing: 1px;
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        #next-page-button.show {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: all;
+        }
+
+        #next-page-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(45deg, #ff5252, #ffb74d);
+        }
+
+        #next-page-button:active {
+            transform: translateY(-1px);
+        }
+
+        /* Ensure the page has enough content to scroll */
+        body.page-three {
+            min-height: 150vh;
+            padding-bottom: 100px;
+        }
+
+        img {
+            display: block;
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover;
+            margin: 0;
+            position: relative;
+        }
+
+        .scroll-prompt {
+            text-align: center;
+            padding: 50px 20px;
+            margin-bottom: 50px;
+        }
+
+        .scroll-prompt p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: #fff;
+            font-weight: 600;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+        }
+
+        #play-audio-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        #play-audio-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body class="page-three">
+    <audio id="background-audio" preload="auto" controls style="display: none;">
+        <source src="your-audio-file.mp3" type="audio/mpeg">
+        <source src="your-audio-file.wav" type="audio/wav">
+        <source src="your-audio-file.ogg" type="audio/ogg">
+        Your browser does not support the audio element.
+    </audio>
+    <div class="scroll-prompt">
+        <p>A message awaits below. Please press play to start the music and scroll down, my love.</p>
+        <button id="play-audio-button">Play</button>
+    </div>
+    
+    <img src="your-poster-image.png" alt="A special poster for my love">
+
+    <button id="next-page-button">Continue to Next Page</button>
+
+    <script src="third-page-script.js"></script>
+    <script>
+        // Show the next page button when user scrolls near the bottom
+        window.addEventListener('scroll', function() {
+            const button = document.getElementById('next-page-button');
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            const windowHeight = window.innerHeight;
+            const documentHeight = document.documentElement.scrollHeight;
+            
+            // Show button when user has scrolled 80% of the page
+            if (scrollTop + windowHeight >= documentHeight * 0.8) {
+                button.classList.add('show');
+            } else {
+                button.classList.remove('show');
+            }
+        });
+
+        // Navigate to fourth-page.html when button is clicked
+        document.getElementById('next-page-button').addEventListener('click', function() {
+            window.location.href = 'fourth-page.html';
+        });
+
+        // Enhanced audio functionality with debugging
+        let audioInitialized = false;
+        const audio = document.getElementById('background-audio');
+        
+        document.getElementById('play-audio-button').addEventListener('click', function() {
+            const button = this;
+            
+            // Initialize audio on first user interaction
+            if (!audioInitialized) {
+                console.log('🎵 Initializing audio...');
+                audio.load(); // Reload the audio element
+                audioInitialized = true;
+            }
+            
+            // Set properties
+            audio.volume = 1.0; // Full volume
+            audio.loop = true;  // Loop the audio
+            
+            console.log('🔍 Audio state:', {
+                paused: audio.paused,
+                currentTime: audio.currentTime,
+                duration: audio.duration,
+                readyState: audio.readyState,
+                src: audio.currentSrc
+            });
+            
+            if (audio.paused) {
+                // Show loading state
+                button.textContent = 'Loading...';
+                button.disabled = true;
+                
+                // Attempt to play
+                const playPromise = audio.play();
+                
+                if (playPromise !== undefined) {
+                    playPromise.then(() => {
+                        console.log('✅ Audio started successfully!');
+                        button.textContent = 'Pause Music';
+                        button.disabled = false;
+                        button.style.background = 'linear-gradient(45deg, #e74c3c, #c0392b)';
+                    }).catch(error => {
+                        console.error('❌ Play failed:', error.name, error.message);
+                        button.textContent = 'Play (Error - Check Console)';
+                        button.disabled = false;
+                        
+                        // Try alternative approach - show actual audio controls
+                        if (confirm('Audio failed to play automatically. Would you like to try using browser audio controls instead?')) {
+                            audio.style.display = 'block';
+                            audio.style.position = 'fixed';
+                            audio.style.top = '10px';
+                            audio.style.left = '10px';
+                            audio.style.zIndex = '9999';
+                        }
+                    });
+                }
+            } else {
+                audio.pause();
+                button.textContent = 'Play Music';
+                button.style.background = 'linear-gradient(45deg, #667eea, #764ba2)';
+                console.log('⏸️ Audio paused');
+            }
+        });
+        
+        // Audio event listeners for debugging
+        audio.addEventListener('loadstart', () => console.log('📂 Loading started...'));
+        audio.addEventListener('loadeddata', () => console.log('📊 Data loaded'));
+        audio.addEventListener('canplay', () => console.log('▶️ Can start playing'));
+        audio.addEventListener('canplaythrough', () => console.log('🎵 Can play through'));
+        audio.addEventListener('error', (e) => {
+            console.error('🚫 Audio error:', e.target.error);
+            alert(`Audio Error: ${e.target.error ? e.target.error.message : 'Unknown error'}\n\nPlease check:\n1. File exists: your-audio-file.mp3\n2. File is not corrupted\n3. Browser supports MP3`);
+        });
+        audio.addEventListener('playing', () => console.log('🎶 Audio is now playing!'));
+        audio.addEventListener('pause', () => console.log('⏸️ Audio paused'));
+        
+        // Test file accessibility on page load
+        window.addEventListener('load', function() {
+            setTimeout(() => {
+                console.log('🔍 Testing audio file accessibility...');
+                if (audio.readyState === 0) {
+                    console.warn('⚠️ Audio file may not be loading. Check file path and name.');
+                }
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

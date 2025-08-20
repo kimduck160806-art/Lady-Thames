@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Special Memory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+            position: relative;
+            height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .page-five {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+        }
+
+        .full-screen-image {
+            width: 100%;
+            height: 100vh;
+            object-fit: fill;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        #video-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border: none;
+            padding: 20px 40px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        #video-button.show {
+            opacity: 1;
+            animation: pulse 2s infinite;
+        }
+
+        #video-button:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+            background: linear-gradient(135deg, #ee5a24, #ff6b6b);
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            }
+            50% {
+                box-shadow: 0 10px 30px rgba(255, 107, 107, 0.8);
+            }
+            100% {
+                box-shadow: 0 10px 30px rgba(255, 107, 107, 0.4);
+            }
+        }
+
+        #next-page-link {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #333;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 30px;
+            font-weight: bold;
+            font-size: 16px;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        #next-page-link.show {
+            opacity: 1;
+            animation: slideInUp 0.5s ease-out;
+        }
+
+        #next-page-link:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes slideInUp {
+            from {
+                transform: translateY(30px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #video-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        #video-container {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+            background: #000;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: scale(0.8) translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        #close-video {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            border: none;
+            font-size: 30px;
+            cursor: pointer;
+            z-index: 1001;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        #close-video:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        #video-player {
+            width: 100%;
+            height: auto;
+            max-height: 70vh;
+            display: block;
+            outline: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            #video-button {
+                padding: 15px 30px;
+                font-size: 18px;
+            }
+
+            #next-page-link {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 25px;
+                font-size: 14px;
+            }
+
+            #video-container {
+                width: 95%;
+                margin: 20px;
+            }
+
+            #close-video {
+                top: 10px;
+                right: 15px;
+                font-size: 24px;
+                width: 35px;
+                height: 35px;
+            }
+        }
+
+        /* Dark overlay for better text visibility */
+        .page-five::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* Ensure buttons are above the overlay */
+        #video-button,
+        #next-page-link {
+            z-index: 15;
+        }
+    </style>
+</head>
+<body class="page-five">
+    <img src="your-special-image.png" alt="A special memory" class="full-screen-image">
+    
+    <!-- Video Button (appears after 5 seconds) -->
+    <button id="video-button">OPEN</button>
+    
+    <!-- Next Page Link (appears after video is closed) -->
+    <a href="sixth-page.html" id="next-page-link">Continue →</a>
+    
+    
+    <!-- Video Modal -->
+    <div id="video-modal">
+        <div id="video-container">
+            <button id="close-video">&times;</button>
+            <video id="video-player" controls>
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+    <script>
+        // Show the video button after 5 seconds
+        setTimeout(function() {
+            document.getElementById('video-button').classList.add('show');
+        }, 5000);
+        
+        // Handle video button click
+        document.getElementById('video-button').addEventListener('click', function() {
+            const videoPlayer = document.getElementById('video-player');
+            const videoModal = document.getElementById('video-modal');
+            
+            // Set the source to your default video file
+            videoPlayer.src = 'your-video.mp4'; // Replace with your actual video filename
+            
+            // Show the video modal
+            videoModal.style.display = 'flex';
+            
+            // Hide the open button
+            document.getElementById('video-button').style.display = 'none';
+            
+            // Play the video automatically
+            videoPlayer.play().catch(function(error) {
+                console.log('Auto-play was prevented:', error);
+            });
+        });
+        
+        // Handle close video button
+        document.getElementById('close-video').addEventListener('click', function() {
+            const videoModal = document.getElementById('video-modal');
+            const videoPlayer = document.getElementById('video-player');
+            const nextPageLink = document.getElementById('next-page-link');
+            
+            // Hide the modal
+            videoModal.style.display = 'none';
+            
+            // Pause and reset the video
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+            
+            // Show the open button again
+            document.getElementById('video-button').style.display = 'block';
+            
+            // Show the next page link (video has been watched)
+            nextPageLink.classList.add('show');
+        });
+        
+        // Handle clicking outside the video to close
+        document.getElementById('video-modal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                document.getElementById('close-video').click();
+            }
+        });
+        
+        // Handle escape key to close video
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const videoModal = document.getElementById('video-modal');
+                if (videoModal.style.display === 'flex') {
+                    document.getElementById('close-video').click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

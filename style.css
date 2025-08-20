@@ -1,0 +1,345 @@
+/* --- Common Styles --- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-size: cover;
+    background-position: center;
+}
+
+.container {
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 40px;
+    border-radius: 10px;
+}
+
+/* --- Styles for Page 1 (index.html) --- */
+body.page-one {
+    background-image: url('your-background-image.jpg');
+}
+
+.prompt-text {
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+h1 {
+    font-size: 2.5em;
+}
+
+#password-input {
+    background: none;
+    border: none;
+    border-bottom: 2px solid white;
+    color: white;
+    font-size: 1.5em;
+    text-align: center;
+    padding: 5px;
+    outline: none;
+    width: 250px;
+}
+
+#password-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+#password-form {
+    margin-top: 10px;
+}
+
+/* --- Styles for Page 2 (next-page.html) --- */
+body.page-two {
+    background-image: url('your-image-2.jpg');
+}
+
+.question {
+    font-size: 2em;
+    margin-bottom: 30px;
+}
+
+.image-container {
+    max-width: 300px;
+    margin: 0 auto;
+}
+
+.image-container img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5);
+    border: 1px solid #eee;
+}
+
+#proceed-button {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 20px;
+    transition: all 0.3s ease;
+}
+
+#proceed-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* --- Styles for Page 3 (third-page.html) --- */
+body.page-three {
+    display: block;
+    height: auto;
+}
+
+body.page-three img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.scroll-prompt {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80%;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    font-size: 1.5em;
+    z-index: 20;
+    border-radius: 10px;
+}
+
+#play-audio-button {
+    background-color: transparent;
+    color: white;
+    border: 2px solid white;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+#play-audio-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+#next-page-button {
+    display: block;
+    margin: 50px auto;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: 2px solid white;
+    padding: 15px 30px;
+    font-size: 1.4em;
+    cursor: pointer;
+    border-radius: 50px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    transition: all 0.5s ease-in-out;
+}
+
+#next-page-button:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8),
+                0 0 30px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+
+/* --- Styles for Page 4 (fourth-page.html) --- */
+body.page-four {
+    background-image: url('your-background-image.jpg');
+    height: auto;
+    align-items: flex-start;
+    padding-top: 50px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+.essay-container {
+    background-color: rgba(0, 0, 0, 0.8);
+    padding: 30px;
+    border-radius: 10px;
+    width: 85%;
+    max-width: 900px;
+    margin: 20px auto 50px auto;
+    text-align: left;
+    line-height: 1.7;
+    color: #f0f0f0;
+}
+
+/* --- Styles for the Button on the Fourth Page --- */
+.button-container {
+    text-align: center;
+    padding: 50px 0;
+}
+
+.next-page-button-link {
+    display: inline-block;
+    width: fit-content;
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: 2px solid white;
+    padding: 15px 30px;
+    font-size: 1.4em;
+    cursor: pointer;
+    border-radius: 50px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    transition: all 0.5s ease-in-out;
+}
+
+.next-page-button-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.8), 
+                0 0 30px rgba(255, 255, 255, 0.5);
+    transform: scale(1.05);
+}
+
+/* --- Styles for the Fifth Page --- */
+body.page-five {
+    display: block;
+    height: auto;
+    overflow-y: scroll;
+    position: relative;
+}
+
+.full-screen-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+/* --- Video Button Styles --- */
+#video-button {
+    position: fixed;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 3px solid white;
+    padding: 20px 40px;
+    font-size: 1.8em;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 50px;
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.6),
+                0 0 40px rgba(255, 255, 255, 0.4);
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    backdrop-filter: blur(10px);
+}
+
+#video-button.show {
+    opacity: 1;
+}
+
+#video-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.8),
+                0 0 60px rgba(255, 255, 255, 0.6);
+    transform: translate(-50%, -50%) scale(1.1);
+}
+
+/* --- Next Page Link Styles --- */
+#next-page-link {
+    position: fixed;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: white;
+    border: 2px solid white;
+    padding: 15px 35px;
+    font-size: 1.4em;
+    font-weight: bold;
+    text-decoration: none;
+    cursor: pointer;
+    border-radius: 50px;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.5),
+                0 0 25px rgba(255, 255, 255, 0.3);
+    z-index: 1000;
+    opacity: 0;
+    transition: all 0.5s ease-in-out;
+    backdrop-filter: blur(10px);
+    display: inline-block;
+}
+
+#next-page-link.show {
+    opacity: 1;
+}
+
+#next-page-link:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.8),
+                0 0 45px rgba(255, 255, 255, 0.6);
+    transform: translate(-50%, -50%) scale(1.05);
+}
+
+/* --- Video Modal Styles --- */
+#video-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+#video-container {
+    position: relative;
+    max-width: 90%;
+    max-height: 90%;
+}
+
+#video-player {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
+}
+
+#close-video {
+    position: absolute;
+    top: -40px;
+    right: 0;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2em;
+    cursor: pointer;
+    padding: 5px 15px;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+}
+
+#close-video:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.2);
+}
